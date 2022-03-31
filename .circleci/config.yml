@@ -43,24 +43,32 @@ jobs:
     docker:
       - image: cimg/node:17.4.0
     steps:
-      # - checkout
-      # - run:
-          # name: Update NPM
-          # command: "sudo npm install -g npm"
-      # - restore_cache:
-          # key: dependency-cache-{{ checksum "package-lock.json" }}
-      # - run:
-          # name: Install Dependencies
-          # command: npm install
-      # - save_cache:
-          # key: dependency-cache-{{ checksum "package-lock.json" }}
-          # paths:
-            # - ./node_modules
-      # - run:
-      #     name: Tests
-      #     command: npm run test
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+      #- checkout
+      #- run:
+      #    name: Update NPM
+      #    command: "sudo npm install -g npm"
+      #- restore_cache:
+      #    key: dependency-cache-{{ checksum "package-lock.json" }}
+      #- run:
+      #    name: Install Dependencies
+      #    command: npm install
+      #- save_cache:
+      #    key: dependency-cache-{{ checksum "package-lock.json" }}
+      #    paths:
+      #      - ./node_modules
+      #- run:
+      #    name: Tests
+      #    command: npm run test
+      #- restore_cache:
+      #    key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Webpack
+          name: Webpack Compile
           command: npm run start:webpack
+workflows:
+  version: 2
+  test_and_build:
+    jobs:
+      - install_deps
+      - lint
+      - test
+      - build
