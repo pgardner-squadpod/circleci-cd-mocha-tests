@@ -1,8 +1,6 @@
 import { expect } from 'chai';
 import { TestFunc } from '.';
 
-const asdf = "asdf";
-
 describe("TestFunc Tests", () => {
     it('Initializes values OK', () => {
         const testColor = "yellow";
