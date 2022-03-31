@@ -23,7 +23,7 @@ jobs:
     docker:
       - image: cimg/node:17.4.0
     steps:
-      # - checkout
+      - checkout
       # - run:
       #     name: Update NPM
       #     command: "sudo npm install -g npm"
@@ -43,6 +43,7 @@ jobs:
     docker:
       - image: cimg/node:17.4.0
     steps:
+      - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -52,6 +53,7 @@ jobs:
     docker:
       - image: cimg/node:17.4.0
     steps:
+      - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -91,7 +93,7 @@ jobs:
     docker:
       - image: cimg/node:17.4.0
     steps:
-      # - checkout
+      - checkout
       # - run:
           # name: Update NPM
           # command: "sudo npm install -g npm"
