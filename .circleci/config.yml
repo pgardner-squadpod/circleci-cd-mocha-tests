@@ -93,9 +93,10 @@ jobs:
   #     - run:
   #         name: Webpack Build
   #         command: npm run start:webpack
-# workflows:
-#   lint-test-and-build:
-#     jobs:
+workflows:
+  lint-test-and-build:
+    jobs:
+      - lint-test-build
 #       - lint
 #       - test:
 #           requires:
