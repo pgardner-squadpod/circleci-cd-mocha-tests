@@ -55,4 +55,4 @@ jobs:
       #     command: npm run test
       - run:
           name: Start the app
-          command: npm run start-webpack
+          command: npm run start:webpack
