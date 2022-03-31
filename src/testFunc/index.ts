@@ -16,5 +16,5 @@ export class TestFunc {
     public sumNumber(adder: number) { return this.number + adder; }
     public subtractNumber(subber: number) { return this.number - subber; }
     public multiplyNumber(multer: number) { return this.number * multer; }
-    public divideNumber(divver: number) { return this.number /  divver; }
+    public divideNumber(divver: number) { return this.number / divver * divver; }
 }
