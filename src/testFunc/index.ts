@@ -18,3 +18,5 @@ export class TestFunc {
     public multiplyNumber(multer: number) { return this.number * multer; }
     public divideNumber(divver: number) { return this.number /  divver; }
 }
+
+const asdf = "asdf";

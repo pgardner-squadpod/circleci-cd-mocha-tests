@@ -1,5 +1,57 @@
 version: 2.1
 jobs:
+  install-deps:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      - checkout
+      - run:
+          name: Update NPM
+          command: "sudo npm install -g npm"
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+  lint:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      # - checkout
+      # - run:
+      #     name: Update NPM
+      #     command: "sudo npm install -g npm"
+      # - restore_cache:
+      #     key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          command: npm run test:lint
+      # - run:
+      #     name: Install Dependencies
+      #     command: npm install
+      # - save_cache:
+      #     key: dependency-cache-{{ checksum "package-lock.json" }}
+      #     paths:
+      #       - ./node_modules
+  tsc-compile:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      - run:
+          command: npm run test:tsc
+  unit-tests:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      - run:
+          command: npm run test
   lint-test-build:
     working_directory: ~/project
     docker:
@@ -30,7 +82,73 @@ jobs:
       - run:
           name: Build via Webpack
           command: npm run start:webpack
+  build:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      # - checkout
+      # - run:
+          # name: Update NPM
+          # command: "sudo npm install -g npm"
+      # - restore_cache:
+          # key: dependency-cache-{{ checksum "package-lock.json" }}
+      # - run:
+          # name: Install Dependencies
+          # command: npm install
+      # - save_cache:
+          # key: dependency-cache-{{ checksum "package-lock.json" }}
+          # paths:
+            # - ./node_modules
+      # - run:
+          # name: Lint
+          # command: npm run test:lint
+      # - run:
+          # name: TS Compiler
+          # command: npm run test:tsc
+      # - run:
+          # name: Test
+          # command: npm run test
+      - run:
+          name: Build via Webpack
+          command: npm run start:webpack
+  # lint-test-build:
+  #   working_directory: ~/project
+  #   docker:
+  #     - image: cimg/node:17.4.0
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Update NPM
+  #         command: "sudo npm install -g npm"
+  #     - restore_cache:
+  #         key: dependency-cache-{{ checksum "package-lock.json" }}
+  #     - run:
+  #         name: Install Dependencies
+  #         command: npm install
+  #     - save_cache:
+  #         key: dependency-cache-{{ checksum "package-lock.json" }}
+  #         paths:
+  #           - ./node_modules
+  #     - run:
+  #         name: Lint
+  #         command: npm run test:lint
+  #     - run:
+  #         name: TS Compiler
+  #         command: npm run test:tsc
+  #     - run:
+  #         name: Test
+  #         command: npm run test
+  #     - run:
+  #         name: Build via Webpack
+  #         command: npm run start:webpack
 workflows:
   lint-test-and-build:
     jobs:
-      - lint-test-build
+      # - lint-test-build
+      - build:
+          requires:
+            - install-deps
+            - lint
+            - tsc-compile
+            - unit-tests
