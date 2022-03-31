@@ -1,7 +1,8 @@
 version: 2.1
+working_directory: ~/project
 jobs:
   install_deps:
-    working_directory: ~/project
+    # working_directory: ~/project
     docker:
       - image: cimg/node:17.4.0
     steps:
@@ -21,34 +22,37 @@ jobs:
           paths:
             - ./node_modules
   lint:
-    working_directory: ~/project
+    # working_directory: ~/project
     docker:
       - image: cimg/node:17.4.0
     steps:
       - checkout
       - restore_cache:
+          name: Check if deps cache exists
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Lint
           command: npm run test:lint
   test:
-    working_directory: ~/project
+    # working_directory: ~/project
     docker:
         - image: cimg/node:17.4.0
     steps:
       - checkout
       - restore_cache:
+          name: Check if deps cache exists
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Tests
           command: npm run test
   build:
-    working_directory: ~/project
+    # working_directory: ~/project
     docker:
       - image: cimg/node:17.4.0
     steps:
       - checkout
       - restore_cache:
+          name: Check if deps cache exists
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Webpack Compile
