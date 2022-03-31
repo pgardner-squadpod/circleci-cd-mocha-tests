@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  lint-test-build:
+  install-deps:
     working_directory: ~/project
     docker:
       - image: cimg/node:17.4.0
@@ -18,19 +18,63 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+  lint:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Lint
           command: npm run test:lint
+  tsc-compile:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: TS Compiler
           command: npm run test:tsc
+  unit-tests:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Test
           command: npm run test
+  build:
+    working_directory: ~/project
+    docker:
+      - image: cimg/node:17.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Build via Webpack
           command: npm run start:webpack
 workflows:
   lint-test-and-build:
     jobs:
-      - lint-test-build
+      - install-deps
+      - lint:
+          requires:
+            - install-deps
+      - tsc-compile:
+          requires:
+            - install-deps
+      - unit-tests:
+          requires:
+            - install-deps
+      - build:
+          requires:
+            - install-deps
+            - lint
+            - tsc-compile
+            - unit-tests
