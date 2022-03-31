@@ -147,9 +147,15 @@ workflows:
     jobs:
       # - lint-test-build
       - install-deps
-      - lint
-      - tsc-compile
-      - unit-tests
+      - lint:
+          requires:
+            - install-deps
+      - tsc-compile:
+          requires:
+            - install-deps
+      - unit-tests:
+          requires:
+            - install-deps
       - build:
           requires:
             - install-deps
