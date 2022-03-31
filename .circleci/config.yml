@@ -65,7 +65,7 @@ jobs:
           name: Webpack Compile
           command: npm run start:webpack
 workflows:
-  version: 2
+  version: 2.1
   test_and_build:
     jobs:
       - install_deps
