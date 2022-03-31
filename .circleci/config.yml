@@ -1,67 +1,23 @@
 version: 2.1
-working_directory: ~/project
 jobs:
-  install_deps:
-    # working_directory: ~/project
+  build:
+    working_directory: ~/project
     docker:
       - image: cimg/node:17.4.0
     steps:
       - checkout
-      - restore_cache:
-          name: Check if deps cache exists
-          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Update NPM
           command: "sudo npm install -g npm"
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
           command: npm install
       - save_cache:
-          name: Save deps cache
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-  lint:
-    # working_directory: ~/project
-    docker:
-      - image: cimg/node:17.4.0
-    steps:
-      - checkout
-      - restore_cache:
-          name: Check if deps cache exists
-          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Lint
-          command: npm run test:lint
-  test:
-    # working_directory: ~/project
-    docker:
-        - image: cimg/node:17.4.0
-    steps:
-      - checkout
-      - restore_cache:
-          name: Check if deps cache exists
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Tests
-          command: npm run test
-  build:
-    # working_directory: ~/project
-    docker:
-      - image: cimg/node:17.4.0
-    steps:
-      - checkout
-      - restore_cache:
-          name: Check if deps cache exists
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Webpack Compile
-          command: npm run start:webpack
-workflows:
-  version: 2
-  test_and_build:
-    jobs:
-      - install_deps
-      - lint
-      - test
-      - build
+          name: Start the app
+          command: npm run start
